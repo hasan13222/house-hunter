@@ -1,13 +1,27 @@
 import { useForm } from "react-hook-form";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const {axiosPublic} = useAxiosPublic();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    axiosPublic.post('/signup', data)
+    .then(res => {
+      if (res.data?.success === false){
+        alert(res.data.message);
+      } else{
+        alert('You have successfully signed up');
+        navigate('/login');
+      }
+    })
+  };
 
   return (
     <>
@@ -82,6 +96,7 @@ const SignUp = () => {
               <input
               className="input mt-1 input-bordered"
                 placeholder="Password"
+                type="password"
                 {...register("password", {
                   required: true,
                   pattern: /^(?=.*[A-Z])(?=.*[\W_]).{7,}$/,

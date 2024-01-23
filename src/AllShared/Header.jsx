@@ -1,4 +1,21 @@
+import { useContext, useState } from "react";
+import { AuthContext } from "../Providers/AuthProvider";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+
 const Header = () => {
+  const { user, setUser } = useContext(AuthContext);
+  const { axiosSecure } = useAxiosSecure();
+  const [logoutMessage, setLogoutMessage] = useState("");
+
+  const handleLogout = () => {
+    axiosSecure.post("/logout", {}).then((res) => {
+      if (res.data?.message) {
+        setUser(null);
+        setLogoutMessage(res.data.message);
+        alert(logoutMessage);
+      }
+    });
+  };
   return (
     <>
       <div className="container-fluid bg-yellow-50">
@@ -45,7 +62,7 @@ const Header = () => {
                     </ul>
                   </li>
                   <li>
-                    <a>Item 3</a>
+                    <a href="/owner-dashboard">Dashboard</a>
                   </li>
                 </ul>
               </div>
@@ -72,13 +89,26 @@ const Header = () => {
                   </details>
                 </li>
                 <li>
-                  <a>Item 3</a>
+                  <a href="/owner-dashboard">Dashboard</a>
                 </li>
               </ul>
             </div>
             <div className="navbar-end">
-              <a href="/signup" className="btn btn-warning">Signup</a>
-              <a href="/login" className="btn btn-warning ml-3">Login</a>
+              {user && (
+                <button onClick={handleLogout} className="btn btn-warning ml-3">
+                  Logout
+                </button>
+              )}
+              {!user && (
+                <a href="/signup" className="btn btn-warning">
+                  Signup
+                </a>
+              )}
+              {!user && (
+                <a href="/login" className="btn btn-warning ml-3">
+                  Login
+                </a>
+              )}
             </div>
           </div>
         </div>
