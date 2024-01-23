@@ -1,0 +1,9 @@
+#logo{
+    width: 120px;
+    height: 60px;
+}
+.signup__cont{
+    background: url('/signup.svg') no-repeat;
+    background-position: right center;
+    background-size: contain;
+}
